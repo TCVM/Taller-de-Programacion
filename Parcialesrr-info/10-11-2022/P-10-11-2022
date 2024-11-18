@@ -1,0 +1,128 @@
+programa Ejercicio-1
+procesos
+  proceso esquina
+  comenzar
+    si (HayPapelEnLaEsquina)
+      tomarPapel
+    si (HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  
+  proceso avanzarN(E x: numero)
+  comenzar
+    repetir x
+      esquina
+      mover
+  fin
+  
+  proceso juntarPapeles(ES x: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      x:=x+1
+  fin
+  
+  proceso vaciarBolsaDePapeles
+  comenzar
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  
+  proceso avisar(E x: numero)
+  comenzar
+    si (x=1)
+      EnviarMensaje(V,robot2)
+      EnviarMensaje(V,robot3)
+    sino
+      si (x=2)
+        EnviarMensaje(V,robot1)
+        EnviarMensaje(V,robot3)
+      sino
+        si (x=3)
+          EnviarMensaje(V,robot1)
+          EnviarMensaje(V,robot2)
+  fin
+  
+areas
+  inicio0: AreaP(4,1,4,1)
+  area1: AreaP(1,1,1,100)
+  area2: AreaP(2,1,2,100)
+  area3: AreaP(3,1,3,100)
+  drop: AreaPC(80,80,80,80)
+  
+robots
+
+  robot fiscalizador
+  variables
+    p, x0, y0: numero
+    ok: boolean
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    
+    p:=0
+    x0:=PosAv
+    y0:=PosCa
+    
+    repetir 3
+      RecibirMensaje(ok,*)
+    
+    BloquearEsquina(80,80)
+    Pos(80,80)
+    juntarPapeles(p)
+    Pos(x0,y0)
+    LiberarEsquina(80,80)
+    Informar('Total_Papeles',p)
+  fin
+  
+  robot recolector
+  variables
+    id, x0, y0: numero
+    ok: boolean
+  comenzar
+    ok:=V
+    x0:=PosAv
+    y0:=PosCa
+    RecibirMensaje(id,robot0)
+    repetir 9
+      avanzarN(10)
+      avisar(id)
+      RecibirMensaje(ok,*)
+      RecibirMensaje(ok,*)
+    avanzarN(9)
+    esquina
+    
+    BloquearEsquina(80,80)
+    Pos(80,80)
+    vaciarBolsaDePapeles
+    Pos(x0,y0)
+    LiberarEsquina(80,80)
+    
+    EnviarMensaje(V,robot0)
+  fin
+     
+variables 
+  robot0: fiscalizador
+  robot1: recolector
+  robot2: recolector 
+  robot3: recolector
+  
+comenzar
+  AsignarArea(robot0,inicio0)
+  AsignarArea(robot0,drop)
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,drop)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,drop)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,drop)
+
+  Iniciar(robot0, 4, 1)
+  Iniciar(robot1, 1, 1 )
+  Iniciar(robot2, 2, 1)
+  Iniciar(robot3, 3, 1 )
+fin
+
+
+

@@ -1,0 +1,131 @@
+programa Parical-11-11-2022
+
+procesos
+  proceso instruirRobotAleatorio
+  variables
+    x, y, id: numero
+  comenzar
+    Random(id,1,3)
+    Random(x,40,60)
+    Random(y,40,60)
+    si (id=1)
+      EnviarMensaje(V,robot1)
+      EnviarMensaje(x,robot1)
+      EnviarMensaje(y,robot1)
+    sino
+      si (id=2)
+        EnviarMensaje(V,robot2)
+        EnviarMensaje(x,robot2)
+        EnviarMensaje(y,robot2)
+      sino
+        si (id=3)
+          EnviarMensaje(V,robot3)
+          EnviarMensaje(x,robot3)
+          EnviarMensaje(y,robot3)
+  fin
+  
+  proceso juntarFloresXY(E x: numero; E y: numero; ES f: numero)
+  variables
+    x0, y0: numero
+  comenzar
+    x0:=PosAv
+    y0:=PosCa
+    BloquearEsquina(x,y)
+    Pos(x,y)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f + 1
+    Pos(x0,y0)
+    LiberarEsquina(x,y)
+  fin
+  
+  proceso dejarFloresXY(E x: numero; E y: numero; E f: numero)
+  variables
+    x0, y0: numero
+  comenzar
+    x0:=PosAv
+    y0:=PosCa
+    BloquearEsquina(x,y)
+    Pos(x,y)
+    repetir f
+      depositarFlor
+    Pos(x0,y0)
+    LiberarEsquina(x,y)
+  fin
+
+
+areas
+  cuadrante: AreaPC(40,40,60,60)
+  inicio0: AreaP(4,1,4,1)
+  inicio1: AreaP(1,1,1,1)
+  inicio2: AreaP(2,1,2,1)
+  inicio3: AreaP(3,1,3,1)
+  drop: AreaPC(10,10,10,10)
+
+robots
+  robot fiscalizador
+  variables
+    tf, aux: numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    
+    repetir 8
+      instruirRobotAleatorio
+    
+    EnviarMensaje(F,robot1)
+    EnviarMensaje(F,robot2)
+    EnviarMensaje(F,robot3)
+    
+    tf:=0
+    repetir 3
+      RecibirMensaje(aux,*)
+      tf:=tf + aux
+    Informar('Total_flores',tf)
+  fin
+  
+  robot florero
+  variables
+    x, y, x0, y0, id, f: numero
+    ok: boolean
+  comenzar
+    RecibirMensaje(id,robot0)
+    ok:=V
+    f:=0
+    
+    mientras (ok)
+      RecibirMensaje(ok,robot0)
+      si (ok)
+        RecibirMensaje(x,robot0)
+        RecibirMensaje(y,robot0)
+        juntarFloresXY(x,y,f)
+    
+    EnviarMensaje(f,robot0)
+    dejarFloresXY(10,10,f)
+  fin
+
+variables
+  robot0: fiscalizador
+  robot1: florero
+  robot2: florero
+  robot3: florero
+
+comenzar
+  AsignarArea(robot0,inicio0)
+  AsignarArea(robot1,inicio1)
+  AsignarArea(robot1,cuadrante)
+  AsignarArea(robot1,drop)
+  AsignarArea(robot2,inicio2)
+  AsignarArea(robot2,cuadrante)
+  AsignarArea(robot2,drop)
+  AsignarArea(robot3,inicio3)
+  AsignarArea(robot3,cuadrante)
+  AsignarArea(robot3,drop)
+  
+  Iniciar(robot0,4,1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+fin
+

@@ -1,0 +1,134 @@
+programa p2
+procesos
+  proceso JuntarYDepositarPapel(ES x:numero ES y:numero)
+  comenzar
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    tomarPapel
+    Pos(x,y)
+    LiberarEsquina(15,15)
+    depositarPapel
+    y:=y+1
+  fin
+  proceso JuntarYDepositarFlor(ES x:numero ES y:numero)
+  comenzar
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    tomarFlor
+    Pos(x,y)
+    LiberarEsquina(15,15)
+    depositarFlor
+    x:=x+1
+  fin
+areas
+  AT1: AreaPC(5,4,8,15)
+  AT2: AreaPC(11,4,14,15)
+  A1:  AreaP(50,50,50,50)
+  A2:  AreaP(51,51,51,51)
+  A3:  AreaP(52,52,52,52)
+  A4:  AreaP(53,53,53,53)
+  AF:  AreaP(1,1,1,1)
+  AC:  AreaC(15,15,15,15)
+robots
+  robot robotP
+  variables
+    x,y,a,b,team:numero
+  comenzar
+    RecibirMensaje(team,*)
+    si team = 1
+      x:=5
+      y:=4
+    sino  
+      x:=11
+      y:=4
+    a:=x
+    b:=y
+    BloquearEsquina(a,b)
+    JuntarYDepositarPapel(x,y)
+    JuntarYDepositarPapel(x,y)
+    LiberarEsquina(a,b)  
+    repetir 10
+      JuntarYDepositarPapel(x,y)
+    EnviarMensaje(team,fiscal)
+  fin
+  robot robotF
+  variables    
+    x,y,a,b,team:numero
+  comenzar
+    RecibirMensaje(team,*)
+    si team = 1
+      x:=5
+      y:=4
+    sino
+      x:=11
+      y:=4
+    a:=x
+    b:=y
+    BloquearEsquina(a,b)
+    JuntarYDepositarFlor(x,y)
+    JuntarYDepositarFlor(x,y)
+    LiberarEsquina(a,b)
+    repetir 2
+      JuntarYDepositarFlor(x,y)
+    EnviarMensaje(team,fiscal)
+  fin
+  robot fiscalizador
+  variables
+    team,pri,sec,ter,cuar:numero
+  comenzar
+    team:=1
+    EnviarMensaje(team,r1d1)
+    EnviarMensaje(team,r2d1)
+    team:=2
+    EnviarMensaje(team,r1d2)
+    EnviarMensaje(team,r2d2)
+    RecibirMensaje(pri,*)
+    RecibirMensaje(sec,*)
+    RecibirMensaje(ter,*)
+    RecibirMensaje(cuar,*)
+    si pri = 1
+      si sec = 1
+        team:=1
+        Informar('GANO_TEAM',team)
+      sino
+        si ter = 1
+          team:=1
+          Informar('GANO_TEAM',team)
+        sino
+          Informar('GANO_TEAM',team)
+    sino
+      si sec = 2
+        Informar('GANO_TEAM',team)
+      sino
+        si ter = 2
+          Informar('GANO_TEAM',team)
+        sino
+          team:=1
+          Informar('GANO_TEAM',team)  
+  fin
+variables
+  r1d1:robotF
+  r2d1:robotP
+  r1d2:robotF
+  r2d2:robotP
+  fiscal:fiscalizador
+comenzar
+  AsignarArea(r1d1,AT1)
+  AsignarArea(r1d1,A1)
+  AsignarArea(r1d1,AC)
+  AsignarArea(r2d1,AT1)
+  AsignarArea(r2d1,A2)
+  AsignarArea(r2d1,AC)
+  AsignarArea(r1d2,AT2)
+  AsignarArea(r1d2,A3)
+  AsignarArea(r1d2,AC)
+  AsignarArea(r2d2,AT2)
+  AsignarArea(r2d2,A4)
+  AsignarArea(r2d2,AC)
+  AsignarArea(fiscal,AF)
+  Iniciar(r1d1,50,50)
+  Iniciar(r2d1,51,51)
+  Iniciar(r1d2,52,52)
+  Iniciar(r2d2,53,53)
+  Iniciar(fiscal,1,1)
+fin

@@ -1,0 +1,148 @@
+programa Parcial-4
+
+procesos
+  proceso norte
+  comenzar
+    BloquearEsquina(PosAv,PosCa + 1)
+    mover
+    LiberarEsquina(PosAv,PosCa - 1)
+  fin
+  
+  proceso este
+  comenzar
+    BloquearEsquina(PosAv + 1,PosCa)
+    mover
+    LiberarEsquina(PosAv - 1,PosCa)
+  fin
+  
+  proceso sur
+  comenzar
+    BloquearEsquina(PosAv,PosCa - 1)
+    mover
+    LiberarEsquina(PosAv,PosCa + 1)
+  fin
+
+  proceso oeste
+  comenzar
+    BloquearEsquina(PosAv - 1,PosCa)
+    mover
+    LiberarEsquina(PosAv + 1,PosCa)
+  fin
+
+  proceso vaciarEsquina(ES f: numero; ES p: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f + 1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p + 1
+  fin
+  
+  proceso rectangulo(E b: numero; E h: numero; ES f: numero; ES p: numero)
+  comenzar
+    repetir h
+      vaciarEsquina(f,p)
+      norte
+    derecha
+    repetir b
+      vaciarEsquina(f,p)
+      este
+    derecha
+    repetir h
+      vaciarEsquina(f,p)
+      sur
+    derecha
+    repetir b
+      vaciarEsquina(f,p)
+      oeste
+  fin
+  
+areas
+  ciudad: AreaC(1,1,100,100)
+
+robots
+  robot tipo0
+  variables
+    tf, tp, aux: numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot1)
+    EnviarMensaje(V,robot1)
+    
+    EnviarMensaje(1,robot2)
+    EnviarMensaje(6,robot2)
+    EnviarMensaje(V,robot2)
+    
+    EnviarMensaje(2,robot3)
+    EnviarMensaje(1,robot3)
+    EnviarMensaje(F,robot3)
+    
+    EnviarMensaje(6,robot4)
+    EnviarMensaje(1,robot4)
+    EnviarMensaje(F,robot4)
+    
+    tf:=0
+    tp:=0
+    repetir 4
+      RecibirMensaje(aux,*)
+      tf:=tf + aux
+    EnviarMensaje(V,robot1)
+    EnviarMensaje(V,robot2)
+    EnviarMensaje(V,robot3)
+    EnviarMensaje(V,robot4)
+    repetir 4
+      RecibirMensaje(aux,*)
+      tp:=tp + aux
+    Informar('Total_Flores',tf)
+    Informar('Total_Papeles',tp)
+
+  fin
+  
+  robot tipo1
+  variables
+    b, h, f, p, aux: numero
+    xi, yi: numero
+    horizontal, ok: boolean
+  comenzar
+    f:=0
+    p:=0
+    b:=2
+    h:=8
+    RecibirMensaje(xi,robot0)
+    RecibirMensaje(yi,robot0)
+    RecibirMensaje(horizontal,robot0)
+    si (horizontal)
+      aux:=b
+      b:=h
+      h:=aux
+    Pos(xi,yi)
+    rectangulo(b,h,f,p)
+    EnviarMensaje(f,robot0)
+    RecibirMensaje(ok,robot0)
+    EnviarMensaje(p,robot0)
+  fin
+
+variables
+  robot0: tipo0
+  robot1: tipo1
+  robot2: tipo1
+  robot3: tipo1
+  robot4: tipo1
+
+comenzar
+  AsignarArea(robot0,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,ciudad)
+  
+  Iniciar(robot0,20,15)
+  Iniciar(robot1,20,1)
+  Iniciar(robot2,20,2)
+  Iniciar(robot3,20,4)
+  Iniciar(robot4,20,5)
+fin
+
+
+

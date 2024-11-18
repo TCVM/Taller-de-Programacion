@@ -1,0 +1,12 @@
+{Existen equipos de dos robots cada uno. Cada equipo debe formar con flores y papeles una letra L (4 de ancho y 12 de alto). La letra se forma con dos robots, uno que realiza las lineas horizontales depositando una flor en cada esquina y otro que realiza la linea vertical depositando un papel en cada esquina.}
+{Luego existe un robot fiscalizador que determina que equipo termino primero su letra L e infomar 1 o 2 dependiendo del equipo ganador}
+{El robot fiscalizador comienza en la esquibna (1,1)}
+{El robot 1 del equipo 1 comienza en la esquina (50,50)}
+{El robot 2 del equipo 1 comienza en la esquina (51,51)}
+{El robot 1 del equipo 2 comienza en la esquina (52,52)}
+{El robot 2 del equipo 2 comienza en la esquina (53,53)}
+{La letra L del primer equipo comienza en la esquina (5,4)}
+{La letra L del segundo equipo comienza en la esquina (11,4)}
+{La esquina (15,15)es la que contiene las flores y papeles que los robots deben juntar para formar su linea. Estas flores/papeles deben tomarse de a uno/a por cada robot}
+{Suponga que existe la cantidad de flores y papeles para formar la linea}
+{La letra L de cada equipo tendra algunas esquinas con una flor y un papel, y otras solo con una flor y otras solo papel}

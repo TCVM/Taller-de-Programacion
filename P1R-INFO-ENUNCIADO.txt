@@ -1,0 +1,3 @@
+{Dos robots dseben recorrer el perimetro de un cuadro de lado 15, recolectando todos los papeles a su camino. Cada vez que se completan un lado, deberan depositar todo lo recolectado en la esquina (50,50), y luego continuar con el siguiente lado del cuadrado. Existe un robot acumulador, que debera tomar los papeles de la esquina (50,50), cada vez que alguno de los juntadores dejo papeles alli.}
+{Una vez que los juntadores completaron sus cuadrados, el robot acumulador debera informar que robot junto mas papeles}
+{Los robots juntadores inician en la esquina (1,1) y (30,1), y el robot acumulador en la esquina (100,100)}

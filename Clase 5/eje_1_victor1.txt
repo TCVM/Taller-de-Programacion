@@ -1,0 +1,117 @@
+program ee;
+const
+    dimF=3;
+type
+    rangoV=1..dimF;
+    rangoDl=0..dimF;
+    Ofi=record
+        cod:integer;
+        dni:integer;
+        valor:real;
+    end;
+
+    vec=array[rangoV]of Ofi;
+
+
+
+procedure    cargarVect(var v:vec;var dimL:rangoDl);
+    procedure    leerOfi(var o:ofi);
+        begin
+            randomize;
+            write('Ingrese el cod: ');
+            readln(o.cod);
+            if(o.cod<>-1)then begin
+                write('Ingrese el dni: ');
+                readln(o.dni);
+                write('Ingrese el vaor: ');
+                readln(o.valor);
+            end;
+        end;
+    var
+        o:Ofi;
+    begin
+        dimL:=0;
+        leerOfi(o);
+        while(dimL<dimF)and(o.cod<>-1)do begin
+            writeln('');
+            dimL:=dimL+1;
+            v[dimL]:=o;
+            if(dimL<dimF)then
+                leerOfi(o);
+        end;
+    end;
+
+procedure    imprimir(v:vec;dimL:rangoDl);
+    var
+        i:integer;
+    begin
+        for i:=1 to dimL do begin 
+            writeln('---Ofi ',i,'---');
+            writeln('Cod: ',v[i].cod);
+            writeln('Dni: ',v[i].dni);
+            writeln('valor: ',v[i].valor:2:2);
+        end;
+    end;
+
+procedure    ordenar(var v:vec;dimL:rangoDl);
+    var
+        i,j,pos:integer;
+        item:ofi;
+    begin
+        for i:=1 to dimL-1 do begin
+            pos:=i;
+            for j:=i+1 to dimL do
+                if(v[j].cod<v[pos].cod)then
+                    pos:=j;
+            item:=v[pos];
+            v[pos]:=v[i];
+            v[i]:=item;
+        end;
+    end;
+
+function buscar(v:vec;dimL,cod:integer):integer;
+    var
+        i:integer;
+    begin
+        i:=1;
+        while(i<dimL)and(v[i].cod<cod)do 
+            i:=i+1;
+        if(i<=dimL)then
+            buscar:=cod
+        else
+            buscar:=-1;
+    end;
+
+procedure    monto(v:vec;dimL:rangoDl;var montoTotal:real);
+    begin
+        if(dimL>0)then begin
+            monto(v,dimL-1,montoTotal);
+            montoTotal:=montoTotal+v[dimL].valor;
+        end;
+    end;
+
+var
+    v:vec;
+    dimL:rangoDl;
+    cod,dni:integer;
+    montoTotal:real;
+begin
+    montoTotal:=0;
+    cargarVect(v,dimL);
+    imprimir(v,dimL);
+    ordenar(v,dimL);
+    writeln('');
+    writeln('---ordenado---');
+    imprimir(v,dimL);
+    write('Ingrese un cod: ');
+    readln(cod);
+    dni:=buscar(v,dimL,cod);
+    if(dni<>-1)then begin
+        writeln('El numero existe');
+        writeln('El dni es: ',dni);
+    end
+    else
+        writeln('No existe');
+    monto(v,dimL,montoTotal);
+    writeln('Monto total: ',montoTotal:2:2);
+end.

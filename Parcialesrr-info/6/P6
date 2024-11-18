@@ -1,0 +1,99 @@
+programa Parcial-6
+
+procesos
+  proceso juntar(ES x: numero)
+  comenzar
+    mientras ((HayPapelEnLaEsquina) & (x<10))
+      tomarPapel
+      x:=x + 1
+  fin
+  
+  proceso dejar(E x: numero)
+  comenzar
+    repetir x
+      depositarPapel
+  fin
+
+areas
+  inicio1: AreaP(1,1,1,1)
+  inicio2: AreaP(2,2,2,2)
+  fuente: AreaC(5,5,5,5)
+  drop: AreaC(6,6,6,6)
+
+robots
+  robot recolector1
+  variables
+    p, x0, y0, ciclos: numero
+    ok: boolean
+  comenzar
+    ok:=V
+    x0:=PosAv
+    y0:=PosCa
+    mientras (ok)
+      p:=0
+      si (ciclos>0)
+        RecibirMensaje(ok,robot2)
+      si (ok)
+        BloquearEsquina(5,5)
+        Pos(5,5)
+        juntar(p)
+        ok:= HayPapelEnLaEsquina
+        EnviarMensaje(ok,robot2)
+        BloquearEsquina(6,6)
+        Pos(6,6)
+        LiberarEsquina(5,5)
+        dejar(p)
+        Pos(x0,y0)
+        LiberarEsquina(6,6)
+        ciclos:=ciclos + 1
+    EnviarMensaje(F,robot2)
+  fin
+
+  robot recolector2
+  variables
+    p, x0, y0, ciclos: numero
+    ok: boolean
+  comenzar
+    ok:=V
+    x0:=PosAv
+    y0:=PosCa
+    ciclos:=0
+    mientras (ok)
+      p:=0
+      si (ciclos>0)
+        RecibirMensaje(ok,robot1)
+      si (ok)
+        BloquearEsquina(5,5)
+        Pos(5,5)
+        juntar(p)
+        ok:= HayPapelEnLaEsquina
+        EnviarMensaje(ok,robot1)
+        BloquearEsquina(6,6)
+        Pos(6,6)
+        LiberarEsquina(5,5)
+        dejar(p)
+        Pos(x0,y0)
+        LiberarEsquina(6,6)
+        ciclos:=ciclos + 1
+    EnviarMensaje(F,robot1)
+  fin
+
+
+variables
+  robot1: recolector1
+  robot2: recolector1
+
+comenzar
+  AsignarArea(robot1,inicio1)
+  AsignarArea(robot1,fuente)
+  AsignarArea(robot1,drop)
+  AsignarArea(robot2,inicio2)
+  AsignarArea(robot2,fuente)
+  AsignarArea(robot2,drop)
+
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,2)
+fin
+
+
+

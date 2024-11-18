@@ -1,0 +1,165 @@
+programa Parcial-2
+
+procesos
+  proceso juntarFlores(ES x: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      x:=x+1
+  fin
+  
+  proceso vaciarBolsaDeFlores(ES x: numero)
+  comenzar
+    repetir x
+      depositarFlor
+    x:=0
+  fin
+  
+  proceso rectangulo1(E a: numero; ES f: numero)
+  comenzar
+    repetir 2
+      repetir 15
+        juntarFlores(f)
+        mover
+      derecha
+      repetir (a - 1)
+        juntarFlores(f)
+        mover
+      derecha
+  fin
+  
+  proceso rectangulo2(E a: numero; E av: numero)
+  comenzar
+    repetir 2
+      repetir 15
+        depositarFlor
+        mover
+      derecha
+      repetir (a - 1)
+        depositarFlor
+        mover
+      derecha
+  fin
+
+
+areas
+  equipoA: AreaPC(1,10,100,25)
+  equipoB: AreaPC(1,30,100,45)
+  inicioJefe: AreaP(1,1,1,1)
+  inicioA1: AreaP(2,2,2,2)
+  inicioA2: AreaP(3,3,3,3)
+  inicioB1: AreaP(4,4,4,4)
+  inicioB2: AreaP(5,5,5,5)
+
+robots
+  robot tipo0
+  variables
+    A, AV, x: numero
+  comenzar
+    Random(A,1,5)
+    Random(AV,1,95)
+    EnviarMensaje(A,robotA1)
+    EnviarMensaje(A,robotB1)
+    EnviarMensaje(AV,robotA1)
+    EnviarMensaje(AV,robotB1)
+    EnviarMensaje(A,robotA2)
+    EnviarMensaje(A,robotB2)
+    EnviarMensaje(AV,robotA2)
+    EnviarMensaje(AV,robotB2)
+    RecibirMensaje(x,*)
+    si (x=3)
+      Informar(1)
+    sino
+      si (x=5)
+        Informar(2)
+  fin
+  
+  robot tipo1
+  variables
+    A, AV, xi, yi, dropx, dropy, f, Y: numero
+  comenzar
+    xi:=PosAv
+    yi:=PosCa
+    f:=0
+    si (xi=2)
+      Y:=10
+      dropx:=5
+      dropy:=15
+    sino
+      si (xi=4)
+        Y:=30
+        dropx:=5
+        dropy:=40
+    RecibirMensaje(A,robot0)
+    RecibirMensaje(AV,robot0)
+    Pos(AV,Y)
+    rectangulo1(A,f)
+    Pos(dropx,dropy)
+    vaciarBolsaDeFlores(f)
+    Pos(xi,yi)
+    si (xi=2)
+      EnviarMensaje(f,robotA2)
+    sino
+      si (xi=4)
+        EnviarMensaje(f,robotB2)
+  fin
+  
+  robot tipo2
+  variables
+    A, AV, xi, yi, dropx, dropy, f, Y: numero
+  comenzar
+    RecibirMensaje(A,robot0)
+    RecibirMensaje(AV,robot0)
+    xi:=PosAv
+    yi:=PosCa
+    f:=0
+    si (xi=3)
+      dropx:=5
+      dropy:=15
+      RecibirMensaje(f,robotA1)
+      Y:=10
+    sino
+      si (xi=5)
+        dropx:=5
+        dropy:=40
+        RecibirMensaje(f,robotB1)
+        Y:=30
+    Pos(dropx,dropy)
+    juntarFlores(f)
+    Pos(AV,Y)
+    rectangulo2(A,AV)
+    Pos(xi,yi)
+    EnviarMensaje(xi,robot0)
+  fin
+
+variables
+  robot0: tipo0
+  robotA1: tipo1
+  robotA2: tipo2
+  robotB1: tipo1
+  robotB2: tipo2
+
+comenzar
+  AsignarArea(robot0,inicioJefe)
+  AsignarArea(robotA1,equipoA)
+  AsignarArea(robotA1,inicioA1)
+  AsignarArea(robotA2,equipoA)
+  AsignarArea(robotA2,inicioA2)
+  AsignarArea(robotB1,equipoB)
+  AsignarArea(robotB1,inicioB1)
+  AsignarArea(robotB2,equipoB)
+  AsignarArea(robotB2,inicioB2)
+  
+  Iniciar(robot0,1,1)
+  Iniciar(robotA1,2,2)
+  Iniciar(robotA2,3,3)
+  Iniciar(robotB1,4,4)
+  Iniciar(robotB2,5,5)
+fin
+
+
+
+
+
+
+

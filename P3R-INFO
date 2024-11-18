@@ -1,0 +1,109 @@
+{Dos equipos de dos robots cada uno deben competir entre si. Un equipo jugara dentro del area (1,10)-(100,25), mientras que el otro haran lo mismo dentro del area (1,30)-(100,45). Un quinto robot}
+{fiscalizador sera el encargado de comenzar con la competencia e informar que equipo es el ganador.}
+{La compentencia consiste en lo siguiente:}
+{  1. El fiscalizador elige un numero al azar del 1 al 5. Ese numero sera el ancho "A" del rectangulo que deberan recorrer ambos equipos.}
+{  2. El fiscalizador elige un numero al azar del 1 al 95. Ese numero sera la avenida "V" donde comienzan los rectangulos de ambos equipos}
+{  3. El fiscalizador le informa los valores a ambos equipos para que un equipo recorra un rectangulo de "A" de ancho y 15 de alto comenzando en la esquina ("V",10), mientras que el otro equipo haran}
+{     un rectangulo de las mismas dimensiones pero comenzando en ("V",30).}
+{  4. Ante el aviso del fiscalizador, un robot por equipo comienza con la competencia recorriendo el perimetro de su rectangulo juntando todas las flores que encuentra en todas las esquinas. Al}
+{     finalizar el recorrido deberan dejar todas las flores juntadas en la esquina[(5,15) para un equipo y (5,40) para el otro], las flores deberan ser dejadas de a una. Al finalizar de vaciar su}
+{     bolsa deberan volver a su esquina de inicio y pasarle la posta a su compaÃ±ero de equipo.}
+{  5. El otro robot debera juntar de (5,15) o (5,40) segun le corresponda todas las flores (de a una) dejada por su compaÃ±ero y depositar una flor en cada esquina del perimetro de su rectangulo}
+{     asignado (asuma que junta tantas flores como esquinas debe recorrer). Finalizado el perimetro debera volver a su esquina de inicio finalizando asi su recorrido.}
+{  6. El primer equipo que complete todo el recorrido es el ganador. El fiscalizador debera informar el equipo ganador.}
+{Los 5 robots comienzan en (1,1);(2,2);(3,3);(4,4) y (5,5)}
+programa ej3
+procesos
+  proceso Juntar(E x:numero E y:numero)
+  variables
+    av,ca:numero
+  comenzar
+    tomarFlor
+    av:=PosAv
+    ca:=PosCa
+    Pos(x,y)
+    depositarFlor
+    Pos(av,ca)
+    mover
+  fin
+  proceso Depositar(E x:numero E y:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    Pos(x,y)
+    tomarFlor
+    Pos(av,ca)
+    depositarFlor
+    mover
+  fin
+areas
+  AT1: AreaPC(1,10,100,25)
+  AT2: AreaPC(1,30,100,45)
+  AD1: AreaPC(5,15,5,15)
+  AD2: AreaPC(5,40,5,40)
+  A1:  AreaP(1,1,1,1,1)
+  A2:  AreaP(2,2,2,2)
+  A3:  AreaP(3,3,3,3)
+  A4:  AreaP(4,4,4,4)
+  AF:  AreaP(5,5,5,5)
+robots
+  robot R-J
+  variables
+    team,x,y,a,v,av,ca:numero
+  comenzar
+    x:=PosAv
+    y:=PosCa
+    RecibirMensaje(team,*)
+    RecibirMensaje(a,*)
+    RecibirMensaje(v,*)
+    si team = 1
+      Pos(v,10)
+      av:=5
+      ca:=15
+    sino
+      Pos(v,30)
+      av:=5
+      ca:=40
+    repetir 2
+      repetir 14
+        juntar(av,ca)
+      derecha
+      repetir a
+        juntar(av,ca)
+      derecha
+    Pos(x,y)
+    si team = 1
+      EnviarMensaje(team,r2d1)
+    sino
+      EnviarMensaje(team,r2d2)
+    EnviarMensaje(team,fiscal)     
+  fin
+  robot R-D
+  variables
+    team,x,y,a,v,av,ca:numero
+  comenzar
+    x:=PosAv
+    y:=PosCa
+    RecibirMensaje(team,*)
+    RecibirMensaje(a,*)
+    RecibirMensaje(v,*)
+    si team = 1
+      Pos(v,10)
+      av:=5
+      ca:=15
+    sino
+      Pos(v,30)
+      av:=5
+      ca:=40
+    repetir 2
+      repetir 14
+        depositar(av,ca)
+      derecha
+      repetir a
+        depositar(av,ca)
+      derecha
+    Pos(x,y)
+    EnviarMensaje(team,fiscal)
+  fin
